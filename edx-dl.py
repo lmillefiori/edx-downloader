@@ -313,12 +313,17 @@ def main():
         c += 1
         print('%d - %s -> %s' % (c, course[0], course[2]))
 
-    c_number = int(input('Enter Course Number: '))
-    while c_number > numOfCourses or courses[c_number - 1][2] != 'Started':
-        print('Enter a valid Number for a Started Course ! between 1 and ',
-              numOfCourses)
+    if is_interactive:
         c_number = int(input('Enter Course Number: '))
-    selected_course = courses[c_number - 1]
+        while c_number > numOfCourses or courses[c_number - 1][2] != 'Started':
+            print('Enter a valid Number for a Started Course ! between 1 and ',
+                  numOfCourses)
+            c_number = int(input('Enter Course Number: '))
+        selected_course = courses[c_number - 1]
+    else:
+        selected_course = [course for course in courses 
+                           if course[1].strip() == args.course_id[0].strip()][0]
+
     COURSEWARE = selected_course[1].replace('info', 'courseware')
 
     ## Getting Available Weeks
@@ -339,10 +344,13 @@ def main():
         print('%d - Download %s videos' % (w, week[0].strip()))
     print('%d - Download them all' % (numOfWeeks + 1))
 
-    w_number = int(input('Enter Your Choice: '))
-    while w_number > numOfWeeks + 1:
-        print('Enter a valid Number between 1 and %d' % (numOfWeeks + 1))
+    if is_interactive:
         w_number = int(input('Enter Your Choice: '))
+        while w_number > numOfWeeks + 1:
+            print('Enter a valid Number between 1 and %d' % (numOfWeeks + 1))
+            w_number = int(input('Enter Your Choice: '))
+    else:
+        w_number = numOfWeeks + 1
 
     if w_number == numOfWeeks + 1:
         links = [link for week in weeks for link in week[1]]
